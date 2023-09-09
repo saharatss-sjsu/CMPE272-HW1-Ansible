@@ -1,0 +1,21 @@
+---
+- hosts: group1
+  become: yes
+  tasks:
+    - name: install apache2
+      ansible.builtin.apt:
+        name: apache2
+        state: latest
+    - name: config apache2 port
+      ansible.builtin.copy:
+        dest: /etc/apache2/ports.conf
+        content: "Listen 8080"
+    - name: custom index.html
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "Hello World from SJSU-{{ host_index }}"
+    - name: restart apache2 to update port
+      ansible.builtin.service:
+        name: apache2
+        enabled: true
+        state: restarted
